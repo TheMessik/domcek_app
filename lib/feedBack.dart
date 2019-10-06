@@ -12,17 +12,16 @@
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:web_socket_channel/io.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
 import 'dart:io';
 
 class FeedBack extends StatefulWidget {
-  final socketChannelAddress;
-  FeedBack({Key key, @required this.socketChannelAddress}) : super(key: key);
+  final WebSocketChannel channel;
+  FeedBack({Key key, @required this.channel}) : super(key: key);
 
   @override
   FeedBackState createState() {
-    return FeedBackState(socketChannelAddress);
+    return FeedBackState(channel);
   }
 }
 
@@ -34,9 +33,9 @@ class FeedBackState extends State<FeedBack> {
 
   var otazky = [];
 
-  final socketChannelAddress;
+  final WebSocketChannel channel;
 
-  FeedBackState(this.socketChannelAddress);
+  FeedBackState(this.channel);
 
   @override
   Widget build(BuildContext context) {
@@ -108,7 +107,6 @@ class FeedBackState extends State<FeedBack> {
   }
 
   void sendData() {
-    WebSocketChannel channel = IOWebSocketChannel.connect(socketChannelAddress);
     channel.stream.listen((message) {
       if (message == "Ready") {
         channel.sink.add("feedback");

@@ -4,108 +4,70 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
-import 'package:web_socket_channel/io.dart';
-import 'dart:io';
 
 class UcastnikOtazka extends StatefulWidget {
-  final socketChannelAddress;
-  UcastnikOtazka({Key key, @required this.socketChannelAddress})
-      : super(key: key);
+  final WebSocketChannel channel;
+  UcastnikOtazka({Key key, @required this.channel}) : super(key: key);
 
   @override
   UcastnikOtazkaState createState() {
-    return UcastnikOtazkaState(socketChannelAddress);
+    return UcastnikOtazkaState();
   }
 }
 
 class UcastnikOtazkaState extends State<UcastnikOtazka> {
-  final socketChannelAddress;
-  final _controllerQ1 = TextEditingController();
-  final _formKey = GlobalKey<FormState>();
-
-  UcastnikOtazkaState(this.socketChannelAddress);
+  final _controller = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: new AppBar(
-        centerTitle: true,
+      appBar: AppBar(
         title: Text("Otázka pre hosťa"),
-
       ),
-      body:
-        new Form(
-          key: _formKey,
-          child: new ListView(
-              padding: const EdgeInsets.symmetric(horizontal: 16.0),
-              children: <Widget>[
-                /// Otazka pre hosta
-                new TextFormField(
-                  controller: _controllerQ1,
-                  decoration: InputDecoration(labelText: 'Otazka pre hosťa'),
-                  validator: (value) {
-                    if (value.isEmpty) {
-                      return "Chýba mi tu otázka";
-                    }
-                    return null;
-                  },
-                ),
-
-                /// Tlacitko odovzdat
-                new RaisedButton(
-                    onPressed: () {
-                      _sendData();
-                      _showDialog();
-
-                    },
-                    child: Text("Odovzdať"))
-              ])));
-
-  }
-
-  void _sendData() {
-    WebSocketChannel channel = IOWebSocketChannel.connect(socketChannelAddress);
-    channel.stream.listen((message) {
-      if (message == "Ready") {
-        channel.sink.add("question_for_guest");
-        sleep(const Duration(seconds: 1));
-        print(_controllerQ1.text);
-        channel.sink.add(_controllerQ1.text);
-        channel.sink.close();
-      }
-    });
-
-
-  }
-
-  void _showDialog() {
-    showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder: (BuildContext context) {
-        return Dialog(
-          child: Padding(
-            padding: EdgeInsets.all(20),
-            child: Row(
-              children: <Widget>[
-                new CircularProgressIndicator(),
-                Padding(
-                  padding: const EdgeInsets.all(10.0),
-                  child: new Text("Spracúvam"),
-                )
-              ]
+      body: Padding(
+        padding: const EdgeInsets.all(20.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            Form(
+              child: TextFormField(
+                controller: _controller,
+                decoration: InputDecoration(labelText: 'Send a message'),
+              ),
+            ),
+            StreamBuilder(
+              stream: widget.channel.stream,
+              builder: (context, snapshot) {
+                return Text(snapshot.hasData ? snapshot.data : "");
+              },
             )
-          )
-
-
-        );
-
-      } );
-
-    new Future.delayed(new Duration(seconds: 3), () {
-      Navigator.pop(context);
-      _controllerQ1.clear();
-
-    });
+          ],
+        ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: _sendMessage,
+        tooltip: 'Send message',
+        child: Icon(Icons.send),
+      ), // This trailing comma makes auto-formatting nicer for build methods.
+    );
   }
+
+  void _sendMessage() {
+
+    if (_controller.text.isNotEmpty) {
+      var data = "qGuest" + _controller.text;
+      widget.channel.sink.add(data);
+      print(data);
+      _controller.text = "";
+      widget.channel.sink.close(1000);
+      Navigator.pop(context);
+
+    }
+  }
+
+  /*@override
+  void dispose() {
+    widget.channel.sink.close();
+    super.dispose();
+  }*/
 }

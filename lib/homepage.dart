@@ -20,6 +20,10 @@ class HomePage extends StatefulWidget {
 }
 
 class HomePageState extends State<HomePage> {
+  void initState(){
+    super.initState();
+  }
+
   List<String> program = [];
 
   final title = "82. púť radosti: Rozumieš mi?";
