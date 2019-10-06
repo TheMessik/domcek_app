@@ -36,6 +36,7 @@ class OtazkyNaHostaState extends State<OtazkyNaHosta> {
   OtazkyNaHostaState(this.socketChannelAddress);
   WebSocketChannel channel;
   final otazky = List<String>();
+  var removed = List<String>();
 
   @override
   Widget build(BuildContext context) {
@@ -68,6 +69,7 @@ class OtazkyNaHostaState extends State<OtazkyNaHosta> {
                   itemCount: otazky.length,
                   itemBuilder: (context, index) {
                     final item = otazky[index];
+                    var removed = List<String>();
                     return Dismissible(
                         // Each Dismissible must contain a Key. Keys allow Flutter to
                         // uniquely identify widgets.
@@ -78,14 +80,20 @@ class OtazkyNaHostaState extends State<OtazkyNaHosta> {
                           if (direction == DismissDirection.horizontal) {
                             // Remove the item from the data source.
                             setState(() {
+                              removed.add(otazky[index]);
                               otazky.removeAt(index);
                             });
                           }
-
-                          // Then show a snackbar.
+                          // Show a snackbar in case user wants to undo the dismiss
                           Scaffold.of(context).showSnackBar(SnackBar(
                               duration: Duration(milliseconds: 200),
-                              content: Text("Question dismissed")));
+                              content: Text("Question dismissed"),
+                            action: SnackBarAction(
+                              label: "Undo",
+                              onPressed: undoDismiss
+                            )
+                          ),
+                          );
                         },
 
                         // Show a red background as the item is swiped away.
@@ -103,6 +111,11 @@ class OtazkyNaHostaState extends State<OtazkyNaHosta> {
               })),
 
     );
+  }
+
+  void undoDismiss(){
+    otazky.addAll(removed);
+    removed.clear();
   }
 
 
