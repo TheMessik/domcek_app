@@ -1,8 +1,9 @@
-import 'package:domcek_appka/sockets.dart';
+
 /// Libraries
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:web_socket_channel/io.dart';
+import 'package:web_socket_channel/web_socket_channel.dart';
 
 /// Files
 import 'feedBack.dart';
@@ -28,21 +29,20 @@ class MyApp extends StatefulWidget {
 }
 
 class MyAppState extends State<MyApp> {
-  final socketChannelAddress = "ws://192.168.0.182:44332";
+  final WebSocketChannel channel =
+  IOWebSocketChannel.connect('ws://192.168.0.182:44332');
 
   @override
   Widget build(BuildContext context) {
-    return new MaterialApp(
+    return MaterialApp(
+      title: "Domcek",
       initialRoute: '/',
       routes: {
         '/': (context) => HomePage(),
-        '/otazkyNaHosta': (context) => OtazkyNaHosta(socketChannelAddress),
+        '/otazkyNaHosta': (context) => OtazkyNaHosta(channel),
         '/login': (context) => Prihlasenie(),
-        '/feedback': (context) => FeedBack(
-              socketChannelAddress: socketChannelAddress,
-            ),
-        '/ucastnikOtazka': (context) =>
-            UcastnikOtazka(socketChannelAddress: socketChannelAddress),
+        '/feedback': (context) => FeedBack(channel: channel),
+        '/ucastnikOtazka': (context) => UcastnikOtazka(channel: channel),
         '/homepage': (context) => HomePage(),
       },
     );

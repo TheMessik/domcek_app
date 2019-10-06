@@ -5,7 +5,7 @@ class MyDrawer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return new Drawer(
+    return Drawer(
         // Add a ListView to the drawer. This ensures the user can scroll
         // through the options in the drawer if there isn't enough vertical
         // space to fit everything.
@@ -27,19 +27,19 @@ class MyDrawer extends StatelessWidget {
         ListTile(
           title: Text('Spýtať sa otázku'),
           onTap: () {
-            Navigator.popAndPushNamed(context, '/ucastnikOtazka');
+            Navigator.pushNamed(context, '/ucastnikOtazka');
           },
         ),
         ListTile(
           title: Text('Spätná väzba'),
           onTap: () {
-            Navigator.popAndPushNamed(context, '/feedback');
+            Navigator.pushNamed(context, '/feedback');
           },
         ),
         ListTile(
             title: Text('Otázky pre hosťa'),
             onTap: () {
-              Navigator.popAndPushNamed(context, '/otazkyNaHosta');
+              Navigator.pushNamed(context, '/otazkyNaHosta');
             })
       ];
     } else {
@@ -53,13 +53,13 @@ class MyDrawer extends StatelessWidget {
         ListTile(
           title: Text('Spýtať sa otázku'),
           onTap: () {
-            Navigator.popAndPushNamed(context, '/ucastnikOtazka');
+            Navigator.pushNamed(context, '/ucastnikOtazka');
           },
         ),
         ListTile(
           title: Text('Spätná väzba'),
           onTap: () {
-            Navigator.popAndPushNamed(context, '/feedback');
+            Navigator.pushNamed(context, '/feedback');
           },
         ),
       ];
