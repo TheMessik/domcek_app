@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 
 class MyDrawer extends StatelessWidget {
-  final uID = "moderator";
+  MyDrawer(this.uID);
+  final String uID;
 
   @override
   Widget build(BuildContext context) {
