@@ -3,20 +3,30 @@
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:web_socket_channel/io.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
 
 class UcastnikOtazka extends StatefulWidget {
-  final WebSocketChannel channel;
-  UcastnikOtazka({Key key, @required this.channel}) : super(key: key);
+  String server;
+  UcastnikOtazka({Key key, this.server}) : super(key: key);
 
   @override
   UcastnikOtazkaState createState() {
-    return UcastnikOtazkaState();
+    return UcastnikOtazkaState(server);
   }
 }
 
 class UcastnikOtazkaState extends State<UcastnikOtazka> {
+  String server;
+  WebSocketChannel channel;
   final _controller = TextEditingController();
+
+  UcastnikOtazkaState(this.server);
+
+  void initState() {
+    super.initState();
+    channel = IOWebSocketChannel.connect(server);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -36,9 +46,9 @@ class UcastnikOtazkaState extends State<UcastnikOtazka> {
               ),
             ),
             StreamBuilder(
-              stream: widget.channel.stream,
+              stream: channel.stream,
               builder: (context, snapshot) {
-                return Text(snapshot.hasData ? snapshot.data : "");
+                return Text("");
               },
             )
           ],
@@ -53,21 +63,13 @@ class UcastnikOtazkaState extends State<UcastnikOtazka> {
   }
 
   void _sendMessage() {
-
     if (_controller.text.isNotEmpty) {
       var data = "qGuest" + _controller.text;
-      widget.channel.sink.add(data);
+      channel.sink.add(data);
       print(data);
-      _controller.text = "";
-      widget.channel.sink.close(1000);
+      channel.sink.close(1000);
       Navigator.pop(context);
-
     }
   }
 
-  /*@override
-  void dispose() {
-    widget.channel.sink.close();
-    super.dispose();
-  }*/
 }

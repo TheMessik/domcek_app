@@ -28,18 +28,21 @@ class MyDrawer extends StatelessWidget {
         ListTile(
           title: Text('Spýtať sa otázku'),
           onTap: () {
+            Navigator.pop(context);
             Navigator.pushNamed(context, '/ucastnikOtazka');
           },
         ),
         ListTile(
           title: Text('Spätná väzba'),
           onTap: () {
+            Navigator.pop(context);
             Navigator.pushNamed(context, '/feedback');
           },
         ),
         ListTile(
             title: Text('Otázky pre hosťa'),
             onTap: () {
+              Navigator.pop(context);
               Navigator.pushNamed(context, '/otazkyNaHosta');
             })
       ];
@@ -54,12 +57,14 @@ class MyDrawer extends StatelessWidget {
         ListTile(
           title: Text('Spýtať sa otázku'),
           onTap: () {
+            Navigator.pop(context);
             Navigator.pushNamed(context, '/ucastnikOtazka');
           },
         ),
         ListTile(
           title: Text('Spätná väzba'),
           onTap: () {
+            Navigator.pop(context);
             Navigator.pushNamed(context, '/feedback');
           },
         ),

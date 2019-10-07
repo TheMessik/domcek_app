@@ -11,17 +11,17 @@
 /// TODO: stiahnutie otázok zo servera pomocou WebSockets;
 
 import 'package:flutter/material.dart';
+import 'package:web_socket_channel/io.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
 
 
 class OtazkyNaHosta extends StatefulWidget {
-  final WebSocketChannel channel;
-
-  OtazkyNaHosta(this.channel);
+  final server;
+  OtazkyNaHosta(this.server);
 
   @override
   OtazkyNaHostaState createState() {
-    return OtazkyNaHostaState(channel);
+    return OtazkyNaHostaState(server);
   }
 }
 
@@ -31,12 +31,17 @@ class OtazkyNaHostaState extends State<OtazkyNaHosta> {
     "Co ste mali na obed?",
     "Chutilo Vam?"
   ];*/
-
-  final socketChannelAddress;
-  OtazkyNaHostaState(this.socketChannelAddress);
+  String server;
   WebSocketChannel channel;
+  OtazkyNaHostaState(this.server);
+
   final otazky = List<String>();
   var removed = List<String>();
+
+  void initState(){
+    super.initState();
+    channel = IOWebSocketChannel.connect(server);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -52,19 +57,15 @@ class OtazkyNaHostaState extends State<OtazkyNaHosta> {
           appBar: AppBar(
             title: Text(title),
           ),
-          body: new StreamBuilder(
-              stream: widget.channel.stream,
+          body: StreamBuilder(
+              stream: channel.stream,
               builder: (context, snapshot) {
-                widget.channel.sink.add("ask_guest");
-                if(snapshot.hasData){
-                  if(snapshot.data == "Ready"){}
-                  else{
-                    otazky.add(snapshot.data);
-                  }
-                }
+                channel.sink.add("askGst");
 
                 otazky.add(snapshot.hasData ? snapshot.data : '');
                 print(otazky);
+                dispose();
+
                 return ListView.builder(
                   itemCount: otazky.length,
                   itemBuilder: (context, index) {
@@ -120,7 +121,7 @@ class OtazkyNaHostaState extends State<OtazkyNaHosta> {
 
 
   void dispose() {
-    widget.channel.sink.close();
+    channel.sink.close();
     super.dispose();
   }
 }
