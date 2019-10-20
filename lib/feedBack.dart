@@ -12,30 +12,34 @@
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:web_socket_channel/io.dart';
+
 import 'package:web_socket_channel/web_socket_channel.dart';
-import 'dart:io';
 
 class FeedBack extends StatefulWidget {
-  final WebSocketChannel channel;
-  FeedBack({Key key, @required this.channel}) : super(key: key);
+  final server;
+  FeedBack({Key key, @required this.server}) : super(key: key);
 
   @override
   FeedBackState createState() {
-    return FeedBackState(channel);
+    return FeedBackState(server);
   }
 }
 
 class FeedBackState extends State<FeedBack> {
+  String server;
+  WebSocketChannel channel;
   final controllerQ1 = TextEditingController();
   final controllerQ2 = TextEditingController();
   final controllerQ3 = TextEditingController();
   final _formKey = GlobalKey<FormState>();
 
-  var otazky = [];
+  FeedBackState(this.server);
 
-  final WebSocketChannel channel;
-
-  FeedBackState(this.channel);
+  void initState() {
+    super.initState();
+    channel = IOWebSocketChannel.connect(server);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -88,37 +92,59 @@ class FeedBackState extends State<FeedBack> {
               ),
               new RaisedButton(
                   onPressed: () {
-                    addToArray(otazky, controllerQ1.text, controllerQ2.text,
-                        controllerQ3.text);
-                    print(otazky);
-                    sendData();
+                    if(_formKey.currentState.validate()) {
+                      sendData();
+                      Navigator.pop(context);
+                    }
                   },
                   child: Text("Odovzdať")),
             ]),
       ),
     );
   }
-
-  void addToArray(List array, String q1, String q2, String q3) {
-    array.clear();
-    array.add(q1);
-    array.add(q2);
-    array.add(q3);
-  }
-
   void sendData() {
-    channel.stream.listen((message) {
-      if (message == "Ready") {
-        channel.sink.add("feedback");
-        channel.sink.add(otazky[0]);
-        sleep(const Duration(milliseconds: 200));
-        print("sending 1");
-        channel.sink.add(otazky[1]);
-        print("sending 2");
-        channel.sink.add(otazky[2]);
-        print("sending 3");
-        channel.sink.close(1000);
-      }
-    });
+    String q1 = controllerQ1.text;
+    String q2 = controllerQ2.text;
+    String q3 = controllerQ3.text;
+    var command = "feedBK";
+    var lengthQ1 = q1.length;
+    var lengthQ2 = q2.length;
+    var lengthQ3 = q3.length;
+
+    String data = command;
+
+    /// Q1
+    if (lengthQ1 > 9) {
+      data += "2";
+    } else if (lengthQ1 > 99) {
+      data += "3";
+    } else {
+      data += "1";
+    }
+    data += lengthQ1.toString() + q1;
+
+    /// Q2
+    if (lengthQ2 > 9) {
+      data += 2.toString();
+    } else if (lengthQ2 > 99){
+      data += 3.toString();
+    } else {
+      data += 1.toString();
+    }
+    data += lengthQ2.toString() + q2;
+
+    /// Q3
+    if(lengthQ3 > 9) {
+      data += 2.toString();
+    } else if(lengthQ3 > 99) {
+      data += 3.toString();
+    } else {
+      data += 1.toString();
+    }
+    data += lengthQ3.toString() + q3;
+
+    print(data);
+    channel.sink.add(data);
+    channel.sink.close();
   }
 }

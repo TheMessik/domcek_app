@@ -6,108 +6,75 @@
 ///
 /// Moderatori si mozu vyberat ktore otazky polozia. Tie ktore nechcu polozit mozu odstranit pomocou
 /// potiahnutia dolava ci doprava. Otazky ale nie su odstranene zo servera. Pri dalsom socket request sa vsetky otazky nanovo nacitaju
-///
-/// TODO: po scrollnutí zhora dole nanovo načítať účastnícke otázky;
-/// TODO: stiahnutie otázok zo servera pomocou WebSockets;
 
 import 'package:flutter/material.dart';
+import 'package:web_socket_channel/io.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
 
-
 class OtazkyNaHosta extends StatefulWidget {
-  final WebSocketChannel channel;
-
-  OtazkyNaHosta(this.channel);
+  final server;
+  OtazkyNaHosta(this.server);
 
   @override
   OtazkyNaHostaState createState() {
-    return OtazkyNaHostaState(channel);
+    return OtazkyNaHostaState(server);
   }
 }
 
 class OtazkyNaHostaState extends State<OtazkyNaHosta> {
-  /*final List<String> otazky = [
-    "Ako sa mate?",
-    "Co ste mali na obed?",
-    "Chutilo Vam?"
-  ];*/
-
-  final socketChannelAddress;
-  OtazkyNaHostaState(this.socketChannelAddress);
+  String server;
   WebSocketChannel channel;
-  final otazky = List<String>();
+
+  OtazkyNaHostaState(this.server);
+
+  @override
+  void initState() {
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
     final title = 'Otazky na frajera z daleka';
+    channel = IOWebSocketChannel.connect(server);
+    channel.sink.add("askGst");
+    List<String> questions = new List();
 
-    //Color color = Colors.transparent;
     return MaterialApp(
       title: title,
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
       home: Scaffold(
-          appBar: AppBar(
-            title: Text(title),
-          ),
-          body: new StreamBuilder(
-              stream: widget.channel.stream,
-              builder: (context, snapshot) {
-                widget.channel.sink.add("ask_guest");
-                if(snapshot.hasData){
-                  if(snapshot.data == "Ready"){}
-                  else{
-                    otazky.add(snapshot.data);
-                  }
-                }
+        appBar: AppBar(
+          title: Text(title),
+        ),
+        body: StreamBuilder(
+            stream: channel.stream,
+            builder: (context, snapshot) {
+              if (snapshot.hasData) {
+                questions.add(snapshot.data);
 
-                otazky.add(snapshot.hasData ? snapshot.data : '');
-                print(otazky);
                 return ListView.builder(
-                  itemCount: otazky.length,
-                  itemBuilder: (context, index) {
-                    final item = otazky[index];
-                    return Dismissible(
-                        // Each Dismissible must contain a Key. Keys allow Flutter to
-                        // uniquely identify widgets.
-                        key: Key(UniqueKey().toString()),
-                        // Provide a function that tells the app
-                        // what to do after an item has been swiped away.
-                        onDismissed: (direction) {
-                          if (direction == DismissDirection.horizontal) {
-                            // Remove the item from the data source.
-                            setState(() {
-                              otazky.removeAt(index);
-                            });
-                          }
+                  itemCount: questions.length,
+                  itemBuilder: (context, counter) {
+                    print(questions[counter]);
+                    return new ListTile(
 
-                          // Then show a snackbar.
-                          Scaffold.of(context).showSnackBar(SnackBar(
-                              duration: Duration(milliseconds: 200),
-                              content: Text("Question dismissed")));
-                        },
-
-                        // Show a red background as the item is swiped away.
-                        background: Container(color: Colors.red),
-                        child: Container(
-                            child: ListTile(
-                                    title: Center(child: Text('$item')),
-                                    onTap: () {
-                                    })));
-                               // onRefresh: _refreshList())));
+                      title: new Center(child: Text('${questions[counter]}')),
+                    );
                   },
                 );
-
-
-              })),
-
+              } else {
+                print(snapshot.data);
+                return new Center(child: CircularProgressIndicator());
+              }
+            }),
+      ),
     );
   }
 
-
   void dispose() {
-    widget.channel.sink.close();
+    channel.sink.close();
     super.dispose();
   }
 }

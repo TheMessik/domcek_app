@@ -25,6 +25,7 @@ class HomePageState extends State<HomePage> {
   }
 
   List<String> program = [];
+  final uID = "moderator";
 
   final title = "82. púť radosti: Rozumieš mi?";
 
@@ -37,7 +38,7 @@ class HomePageState extends State<HomePage> {
       body: Center(
         child: Text("Tu príde program"),
       ),
-      drawer: MyDrawer(),
+      drawer: MyDrawer(uID),
     );
   }
 }
