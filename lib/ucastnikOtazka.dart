@@ -7,7 +7,7 @@ import 'package:web_socket_channel/io.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
 
 class UcastnikOtazka extends StatefulWidget {
-  String server;
+  final String server;
   UcastnikOtazka({Key key, this.server}) : super(key: key);
 
   @override

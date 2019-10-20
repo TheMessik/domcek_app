@@ -9,11 +9,14 @@ import 'prihlasenie.dart';
 import 'otazkyNaHosta.dart';
 import 'ucastnikOtazka.dart';
 import 'homepage.dart';
+import 'newMod.dart';
+
+final server = 'ws://192.168.0.182:44332';
 
 // MyApp is a StatefulWidget. This allows updating the state of the
 // widget when an item is removed.
 
-void main() {
+void main() async{
   runApp(MyApp());
 }
 
@@ -27,7 +30,7 @@ class MyApp extends StatefulWidget {
 }
 
 class MyAppState extends State<MyApp> {
-  final server = 'ws://192.168.0.189:44332';
+  final server = 'ws://192.168.0.172:44332';
 
   @override
   Widget build(BuildContext context) {
@@ -35,12 +38,12 @@ class MyAppState extends State<MyApp> {
       title: "Domcek",
       initialRoute: '/',
       routes: {
-        '/': (context) => HomePage(),
+        '/': (context) => Prihlasenie(server: server),
         '/otazkyNaHosta': (context) => OtazkyNaHosta(server),
-        '/login': (context) => Prihlasenie(),
         '/feedback': (context) => FeedBack(server: server),
         '/ucastnikOtazka': (context) => UcastnikOtazka(server: server),
         '/homepage': (context) => HomePage(),
+        '/newMod' : (context) => NewMod(),
       },
     );
   }

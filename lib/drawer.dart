@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
 class MyDrawer extends StatelessWidget {
-  MyDrawer(this.uID);
   final String uID;
+  MyDrawer(this.uID);
 
   @override
   Widget build(BuildContext context) {
@@ -13,10 +13,10 @@ class MyDrawer extends StatelessWidget {
         child: ListView(
             // Important: Remove any padding from the ListView.
             padding: EdgeInsets.zero,
-            children: _moderatorDrawer(context)));
+            children: _drawDrawer(context)));
   }
 
-  List<Widget> _moderatorDrawer(context) {
+  List<Widget> _drawDrawer(context) {
     if (uID == "moderator") {
       return <Widget>[
         DrawerHeader(
@@ -46,7 +46,8 @@ class MyDrawer extends StatelessWidget {
               Navigator.pushNamed(context, '/otazkyNaHosta');
             })
       ];
-    } else {
+    }
+    else if (uID == "administrator") {
       return <Widget>[
         DrawerHeader(
           child: Text('Domček'),
@@ -68,6 +69,36 @@ class MyDrawer extends StatelessWidget {
             Navigator.pushNamed(context, '/feedback');
           },
         ),
+        ListTile(
+            title: Text("Pridať moderátora"),
+            onTap: () {
+              Navigator.pop(context);
+              Navigator.pushNamed(context, '/newMod');
+            })
+      ];
+    }
+    else {
+      return <Widget>[
+        DrawerHeader(
+          child: Text('Domček'),
+          decoration: BoxDecoration(
+            color: Colors.blue,
+          ),
+        ),
+        ListTile(
+          title: Text('Spýtať sa otázku'),
+          onTap: () {
+            Navigator.pop(context);
+            Navigator.pushNamed(context, '/ucastnikOtazka');
+          },
+        ),
+        ListTile(
+          title: Text('Spätná väzba'),
+          onTap: () {
+            Navigator.pop(context);
+            Navigator.pushNamed(context, '/feedback');
+          },
+        )
       ];
     }
   }
