@@ -1,6 +1,6 @@
 /// SUMMARY:
 /// tento kod sa stara o zobrazenie otazok, ktore budu polozene hostovi.
-/// Ucastnici mozu tieto otazky posielat na server pomocou ucastnikOtazka.dart
+/// Ucastnici mozu tieto otazky posielat na server pomocou questionsUpload.dart
 ///
 /// Otazky su nasledne stiahnute zo servera pomocou HTTP socket request a zobrazene
 ///

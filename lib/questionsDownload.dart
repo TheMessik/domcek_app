@@ -1,31 +1,32 @@
 /// SUMMARY:
-/// tento kod sa stara o zobrazenie otazok, ktore budu polozene hostovi.
-/// Ucastnici mozu tieto otazky posielat na server pomocou ucastnikOtazka.dart
+/// Code takes care of the download and the showing of the questions from the participants to the guest
+/// Participants can upload these questions using questionsUpload.dart
 ///
-/// Otazky su nasledne stiahnute zo servera pomocou HTTP socket request a zobrazene
+/// Questions are downloaded using HTTP socket request
 ///
-/// Moderatori si mozu vyberat ktore otazky polozia. Tie ktore nechcu polozit mozu odstranit pomocou
-/// potiahnutia dolava ci doprava. Otazky ale nie su odstranene zo servera. Pri dalsom socket request sa vsetky otazky nanovo nacitaju
+/// Mods can choose which questions they want to ask.
+/// Questions they don't like should be dismissed by swiping left or right
+/// Questions do not need to get removed from the server. By pulling down on the list of the questions, it should be refreshed
 
 import 'package:flutter/material.dart';
 import 'package:web_socket_channel/io.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
 
-class OtazkyNaHosta extends StatefulWidget {
+class QuestionsDownload extends StatefulWidget {
   final server;
-  OtazkyNaHosta(this.server);
+  QuestionsDownload(this.server);
 
   @override
-  OtazkyNaHostaState createState() {
-    return OtazkyNaHostaState(server);
+  QuestionsDownloadState createState() {
+    return QuestionsDownloadState(server);
   }
 }
 
-class OtazkyNaHostaState extends State<OtazkyNaHosta> {
+class QuestionsDownloadState extends State<QuestionsDownload> {
   String server;
   WebSocketChannel channel;
 
-  OtazkyNaHostaState(this.server);
+  QuestionsDownloadState(this.server);
 
   @override
   void initState() {

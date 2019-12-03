@@ -1,27 +1,32 @@
 /// SUMMARY:
 /// Pomocou tejto aktivity môžu účastníci odovzdať otázky ktoré majú na hosťa
+///
+/// Using a simple form, participants have the option to upload their questions
+/// for the guest. These questions are uploaded to the server.
+///
+/// Mods can download these questions.
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:web_socket_channel/io.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
 
-class UcastnikOtazka extends StatefulWidget {
+class QuestionsUpload extends StatefulWidget {
   final String server;
-  UcastnikOtazka({Key key, this.server}) : super(key: key);
+  QuestionsUpload({Key key, this.server}) : super(key: key);
 
   @override
-  UcastnikOtazkaState createState() {
-    return UcastnikOtazkaState(server);
+  QuestionsUploadState createState() {
+    return QuestionsUploadState(server);
   }
 }
 
-class UcastnikOtazkaState extends State<UcastnikOtazka> {
+class QuestionsUploadState extends State<QuestionsUpload> {
   String server;
   WebSocketChannel channel;
   final _controller = TextEditingController();
 
-  UcastnikOtazkaState(this.server);
+  QuestionsUploadState(this.server);
 
   void initState() {
     super.initState();
@@ -32,7 +37,7 @@ class UcastnikOtazkaState extends State<UcastnikOtazka> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Otázka pre hosťa"),
+        title: Text("questions upload"),
       ),
       body: Padding(
         padding: const EdgeInsets.all(20.0),

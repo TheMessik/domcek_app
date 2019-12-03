@@ -5,9 +5,8 @@ import 'package:flutter/material.dart';
 
 /// Files
 import 'feedBack.dart';
-import 'prihlasenie.dart';
-import 'otazkyNaHosta.dart';
-import 'ucastnikOtazka.dart';
+import 'questionsDownload.dart';
+import 'questionsUpload.dart';
 import 'homepage.dart';
 import 'newMod.dart';
 
@@ -38,10 +37,10 @@ class MyAppState extends State<MyApp> {
       title: "Domcek",
       initialRoute: '/',
       routes: {
-        '/': (context) => Prihlasenie(server: server),
-        '/otazkyNaHosta': (context) => OtazkyNaHosta(server),
+        '/': (context) => HomePage(),
+        '/questionsDownload': (context) => QuestionsDownload(server),
         '/feedback': (context) => FeedBack(server: server),
-        '/ucastnikOtazka': (context) => UcastnikOtazka(server: server),
+        '/questionsUpload': (context) => QuestionsUpload(server: server),
         '/homepage': (context) => HomePage(),
         '/newMod' : (context) => NewMod(),
       },
