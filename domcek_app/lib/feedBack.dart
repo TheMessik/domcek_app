@@ -1,11 +1,14 @@
-/// Code serves to give feedback of the action.
-/// A simple form to answer three questions, questions that are coded now are for
-/// development only
+/// Tento kód sa stará o spätnú väzbu. Užívateľ sa k tomuto kódu dostane cez drawer.
+/// Jedná sa o jednoduchý formulár, v ktorom užívateľ odpovedá na 3 otázky:
 ///
-/// After clicking the RaisedButton "Odovzdat", the questions will be put into an array
-/// and sent off to the backend server
+/// 1. Čo som si uvedomil/-a počas tejto akcie?
+/// 2. Aké impulzy do života som prijal/-a?
+/// 3. Môj odkaz:
 ///
-/// TODO: Send questions to the server using WebSockets
+/// Po kliknutí na RaisedButton "Odovzdať" sú otázky uložené do array a následne
+/// poslané na server pomocou WebSockets.
+///
+/// TODO: Posielanie otázok účastníkov na server pomocou WebSockets
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -43,14 +46,14 @@ class FeedBackState extends State<FeedBack> {
     return Scaffold(
       appBar: new AppBar(
         centerTitle: true,
-        title: Text("Feedback"),
+        title: Text("Spätná väzba"),
       ),
       body: new Form(
         key: _formKey,
         child: new ListView(
             padding: const EdgeInsets.symmetric(horizontal: 16.0),
             children: <Widget>[
-              /// Questions n1
+              /// Otazka c.1
               new TextFormField(
                 controller: controllerQ1,
                 decoration: InputDecoration(
@@ -63,7 +66,7 @@ class FeedBackState extends State<FeedBack> {
                 },
               ),
 
-              /// Question n2
+              /// Otazka c.2
               new TextFormField(
                 controller: controllerQ2,
                 decoration: InputDecoration(
@@ -76,7 +79,7 @@ class FeedBackState extends State<FeedBack> {
                 },
               ),
 
-              /// Questions n3
+              /// Otazka c.3
               new TextFormField(
                 controller: controllerQ3,
                 decoration: InputDecoration(labelText: 'Môj odkaz:'),
@@ -94,7 +97,6 @@ class FeedBackState extends State<FeedBack> {
                       Navigator.pop(context);
                     }
                   },
-                  /// "Odovzdat" = submit
                   child: Text("Odovzdať")),
             ]),
       ),

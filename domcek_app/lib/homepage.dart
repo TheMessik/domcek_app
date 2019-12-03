@@ -1,9 +1,9 @@
-/// Main page
-/// 'title' is the title of the currect action
-/// the body is made up of the planned program of the action
+/// Hlavna stranka, tu sa ucastnik dostane po prihlaseni.
 ///
-/// Using drawer, the user can reach the Feedback form and post their questions for the guest speaker
-/// mods can also download and read these questions
+/// Nazov je nazov aktualnej pute. Zobrazi sa program pute.
+///
+/// Cez drawer sa ucsstnik dostane k spatnej vazbe, moze odovzdat otazku pre hosta
+/// a moderatori sa dostanu k otazkam pre hosta od ucastnikov.
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -27,7 +27,7 @@ class HomePageState extends State<HomePage> {
   List<String> program = [];
   final uID = "moderator";
 
-  final title = "testTitle";
+  final title = "82. púť radosti: Rozumieš mi?";
 
   @override
   Widget build(BuildContext context) {
